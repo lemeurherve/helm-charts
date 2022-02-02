@@ -6,13 +6,13 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "rating.labels" . | indent 4 }}
+{{ include "rating.labels" . | indent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.ingress.tls }}
+{{- if .Values.ingress.tls }}
   tls:
   {{- range .Values.ingress.tls }}
     - hosts:
@@ -29,6 +29,7 @@ spec:
         paths:
         {{- range .paths }}
           - path: {{ . }}
+            pathType: Prefix
             backend:
               service:
                 name: {{ $fullName }}
