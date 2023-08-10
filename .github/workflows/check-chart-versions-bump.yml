@@ -24,6 +24,9 @@ jobs:
       - id: check-bump
         name: Check if chart version has been bumped
         run: |
+          echo "= before printf"
+          printf '%s\n' "$GITHUB_REF"
+          echo "= after printf"
           PR_BRANCH=${GITHUB_REF#refs/pull/${{ github.event.pull_request.number }}/merge}
           MAIN_BRANCH=${GITHUB_REF#refs/heads/}
 
