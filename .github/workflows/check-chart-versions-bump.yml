@@ -39,8 +39,11 @@ jobs:
           IFS=$'\n' read -d '' -r -a folders <<< "${{ steps.list_modified_folders.outputs.modified_folders }}"
 
           for folder in "${folders[@]}"; do
+            echo "== folder: ${folder}:"
             MAIN_CHART_VERSION=$(git show origin:charts/"${folder}"/Chart.yaml | grep "^version:")
             PR_CHART_VERSION=$(git show ${{ github.event.before }}:charts/"${folder}"/Chart.yaml | grep "^version:")
+            echo "== MAIN_CHART_VERSION: ${MAIN_CHART_VERSION}:"
+            echo "== PR_CHART_VERSION: ${PR_CHART_VERSION}:"
 
             if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
               echo "ERROR: the version of the '${folder}' chart hasn't been bumped."
