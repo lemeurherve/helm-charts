@@ -46,3 +46,4 @@ jobs:
             fi
 
             echo "The version of the '${folder}' chart has been bumped."
+          done
