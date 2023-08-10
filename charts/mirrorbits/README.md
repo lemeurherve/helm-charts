@@ -1,10 +1,10 @@
 # Mirrorbits
 
-This chart deploys two services [mirrorbits](https://github.com/etix/mirrorbits) and a simple nginx service that return every file
+This chart deploys two services [mirrorbits](https://github.com/etix/mirrorbits) and a simple httpd (Apache2) service that return every file
 
 A "Quick Start" is available on [etix/mirrorbits](repository)
 
-Docker image used in this chart is defined from [olblak/mirrorbits](https://github.com/olblak/mirrorbits)
+Docker image used in this chart is defined from [jenkins-infra/docker-mirrorbits](https://github.com/jenkins-infra/docker-mirrorbits)
 
 
 Parameters can be added to a file url to display various information like:
@@ -101,10 +101,6 @@ mirrorbits add -http https://mirror.gruenehoelle.nl/jenkins/ -rsync rsync://esme
 
 mirrorbits add -http https://ftp.halifax.rwth-aachen.de/jenkins/ -rsync rsync://ftp.halifax.rwth-aachen.de/jenkins/ -ftp ftp://ftp.halifax.rwth-aachen.de/jenkins/ -admin-name "ftp@halifax.rwth-aachen.de" -admin-email "ftp@halifax.rwth-aachen.de" rwth-aachen.de
 
-# `20.62.81.57` is a dynamic generated IP retrieved using command `kubectl get service -n mirror  mirror-rsyncd`
-# `20.62.81.57` can be replaced by `mirror-rsyncd.mirror` if on the same kubernetes cluster
-mirrorbits add -http https://mirror.azure.jenkins.io/ -rsync rsync://mirror-rsyncd.mirror/jenkins/ -admin-name "Jenkins Infrastructure" -admin-email "jenkinsci-infra@googlegroups.com" mirror.azure.jenkins.io
-
 mirrorbits add -http https://ftp.belnet.be/mirror/jenkins/ -rsync rsync://rsync.belnet.be -admin-name "Belnet" -admin-email "ftpmaint@belnet.be" ftp.belnet.be
 ```
 # Low priority mirrors
@@ -116,4 +112,4 @@ mirrorbits add -rsync rsync://archives.jenkins.io/jenkins/ -http https://archive
 ## Links
 
 * [Mirrorbits](https://github.com/etix/mirrorbits) - Upstream project
-* [Mirrorbits](https://github.com/olblak/mirrorbits) - Docker Image
+* [Mirrorbits](https://github.com/jenkins-infra/docker-mirrorbits) - Docker Image

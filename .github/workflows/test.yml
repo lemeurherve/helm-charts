@@ -1,15 +1,13 @@
----
 name: Test Charts
-
 on:
-  push:
-  pull_request:
-  workflow_dispatch:
-
+  push: null
+  pull_request: null
+  workflow_dispatch: null
+env:
+  UNITTEST_VERSION: v0.3.4
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         chart:
@@ -17,9 +15,9 @@ jobs:
           - httpredirector
           - jenkins-jobs
           - jenkins-kubernetes-agents
+          - mirrorbits
           - plugin-health-scoring
       fail-fast: false
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -29,22 +27,20 @@ jobs:
           current_helm_version="$(curl --silent --location https://raw.githubusercontent.com/jenkins-infra/docker-helmfile/main/Dockerfile  | grep 'ARG' | grep 'HELM_VERSION=' | sort -u | cut -d'=' -f2)"
           echo "CURRENT_HELM_VERSION=${current_helm_version}" >> $GITHUB_OUTPUT
       - name: Set up Helm
-        uses: azure/setup-helm@v3
+        uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3
         with:
           version: "${{ steps.tools-versions.outputs.CURRENT_HELM_VERSION }}"
-
       - name: install helm unittests
         run: |
           helm env
           # Repeat 2 times to fight against network errors in  GHA runners
           # Always return true
-          helm plugin install https://github.com/quintush/helm-unittest \
-            || helm plugin install https://github.com/quintush/helm-unittest \
+          helm plugin install https://github.com/helm-unittest/helm-unittest --version ${UNITTEST_VERSION} \
+            || helm plugin install https://github.com/helm-unittest/helm-unittest --version ${UNITTEST_VERSION} \
             || true
           # Fail if not installed
           helm plugin list | grep unittest
-
       - name: run unit tests
         working-directory: ./charts/
         run: |
-          helm unittest --helm3 "${{ matrix.chart }}"
+          helm unittest "${{ matrix.chart }}"
