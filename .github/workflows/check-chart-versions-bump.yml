@@ -36,6 +36,7 @@ jobs:
           MAIN_BRANCH=${GITHUB_REF#refs/heads/}
           echo "== PR_BRANCH: ${PR_BRANCH}:"
           echo "== MAIN_BRANCH: ${MAIN_BRANCH}:"
+          echo "== GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
 
           for folder in $modified_chart_folders; do
             echo "== folder: ${folder}:"
