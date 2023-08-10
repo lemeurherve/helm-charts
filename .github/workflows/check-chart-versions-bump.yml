@@ -41,7 +41,7 @@ jobs:
             echo "== folder $folder"
             MAIN_CHART_VERSION=$(git show $GITHUB_BASE_REF:charts/$folder/Chart.yaml | grep "^version:")
             echo "== MAIN_CHART_VERSION: $MAIN_CHART_VERSION"
-            PR_CHART_VERSION=$(git show $GITHUB_REF:charts/$folder/Chart.yaml | grep "^version:")
+            PR_CHART_VERSION=$(git show $GITHUB_HEAD_REF:charts/$folder/Chart.yaml | grep "^version:")
             echo "== PR_CHART_VERSION: $PR_CHART_VERSION"
 
             if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
