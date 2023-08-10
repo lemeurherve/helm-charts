@@ -1,4 +1,4 @@
-name: Check if modified chart versions have been bumped
+name: Check chart version bump
 on:
   push: null
   pull_request: null
@@ -9,7 +9,9 @@ jobs:
       - uses: actions/checkout@v3
       - id: list_modified_folders
         name: List modified folders
-        if: github.ref != 'refs/heads/main'
+        # if: github.ref != 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "ls workspace"
           echo "ls workspace"
