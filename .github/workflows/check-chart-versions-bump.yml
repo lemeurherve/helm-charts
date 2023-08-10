@@ -13,21 +13,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "ls workspace"
-          echo "ls workspace"
-          echo "ls workspace"
-          
           gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | grep "^charts/" > changes.txt
-
-          # Get the list of modified files and folders
-          # git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changes.txt
-          # git diff --name-only ${{ github.event.after }} ${{ github.event.before }} > changes.txt
-
-          echo "cat changes.txt"
           cat changes.txt
 
           # Extract the unique folder paths
           awk -F/ '{print $1}' changes.txt | sort --unique > modified_folders.txt
+          
+          echo "= cat modified_folders.txt"
+          cat modified_folders.txt
           
           # Store the modified folders as a step output
           echo "modified_folders=$(cat modified_folders.txt)" >> $GITHUB_OUTPUT
