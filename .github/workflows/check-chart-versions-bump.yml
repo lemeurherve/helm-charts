@@ -24,12 +24,19 @@ jobs:
       - id: check-bump
         name: Check if chart version has been bumped
         run: |
-          PR_BRANCH=${GITHUB_REF#refs/pull/${{ github.event.pull_request.number }}/merge}
-          MAIN_BRANCH=${GITHUB_REF#refs/heads/}
+          echo "= GITHUB_BASE_REF"
+          printf '%s\n' "$GITHUB_BASE_REF"
+          echo "= GITHUB_REF"
+          printf '%s\n' "$GITHUB_REF"
+          echo "= GITHUB_HEAD_REF"
+          printf '%s\n' "$GITHUB_HEAD_REF"
+          echo "= after printf"
+          # PR_BRANCH=${GITHUB_REF#refs/pull/${{ github.event.pull_request.number }}/merge}
+          # MAIN_BRANCH=${GITHUB_REF#refs/heads/}
 
           for folder in $modified_chart_folders; do
-            MAIN_CHART_VERSION=$(git show $MAIN_BRANCH:charts/$folder/Chart.yaml | grep "^version:")
-            PR_CHART_VERSION=$(git show $PR_BRANCH:charts/$folder/Chart.yaml | grep "^version:")
+            MAIN_CHART_VERSION=$(git show $GITHUB_BASE_REF:charts/$folder/Chart.yaml | grep "^version:")
+            PR_CHART_VERSION=$(git show $GITHUB_HEAD_REF:charts/$folder/Chart.yaml | grep "^version:")
 
             if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
               echo "ERROR: the version of the '${folder}' chart hasn't been bumped."
