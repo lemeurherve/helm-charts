@@ -1,0 +1,39 @@
+name: Check if modified chart versions have been bumped
+on:
+  push: null
+  pull_request: null
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: list_modified_folders
+        name: List modified folders
+        if: github.ref != 'refs/heads/main'
+        run: |
+          # Get the list of modified files and folders
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changes.txt
+
+          # Extract the unique folder paths
+          awk -F/ '{print $1}' changes.txt | sort --unique > modified_folders.txt
+          
+          # Store the modified folders as a step output
+          echo "::set-output name=modified_folders::$(cat modified_folders.txt)"
+      - id: check-bump
+        name: Check if every modified chart version has been bumped
+        if: github.ref != 'refs/heads/main'
+        run: |
+          # Read the modified folders from the previous step's output
+          IFS=$'\n' read -d '' -r -a folders <<< "${{ steps.list_modified_folders.outputs.modified_folders }}"
+
+          for folder in "${folders[@]}"; do
+            MAIN_CHART_VERSION=$(git show origin:charts/"${folder}"/Chart.yaml | grep "^version:")
+            PR_CHART_VERSION=$(git show ${{ github.event.before }}:charts/"${folder}"/Chart.yaml | grep "^version:")
+
+            if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
+              echo "ERROR: the version of the '${folder}' chart hasn't been bumped."
+              exit 1
+            fi
+
+            echo "The version of the '${folder}' chart has been bumped."
+          }
