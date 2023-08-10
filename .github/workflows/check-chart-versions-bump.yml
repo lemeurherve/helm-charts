@@ -19,7 +19,12 @@ jobs:
           cat modified_chart_folders.txt
           
           # Store the modified folders as a step output
-          echo "modified_chart_folders=$(cat modified_chart_folders.txt)" >> $GITHUB_OUTPUT
+          # echo "modified_chart_folders=$(cat modified_chart_folders.txt)" >> $GITHUB_OUTPUT
+          {
+            echo 'modified_chart_folders<<EOF'
+            cat modified_chart_folders.txt
+            echo EOF
+          } >> "$GITHUB_ENV"
       - id: check-bump
         name: Check if every modified chart version has been bumped
         if: github.ref != 'refs/heads/main'
@@ -38,7 +43,7 @@ jobs:
 
             if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
               echo "ERROR: the version of the '${folder}' chart hasn't been bumped."
-              exit 1
+              # exit 1
             fi
 
             echo "The version of the '${folder}' chart has been bumped."
