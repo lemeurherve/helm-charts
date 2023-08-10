@@ -26,17 +26,13 @@ jobs:
         run: |
           git checkout -b $GITHUB_BASE_REF
           git checkout -b $GITHUB_HEAD_REF
-          echo "= fetch all prune"
-          git fetch --all --prune
-          echo "= branch all"
-          git branch --all
           
           for folder in $modified_chart_folders; do
             MAIN_CHART_VERSION=$(git show $GITHUB_BASE_REF:charts/$folder/Chart.yaml | grep "^version:")
             PR_CHART_VERSION=$(git show $GITHUB_HEAD_REF:charts/$folder/Chart.yaml | grep "^version:")
 
             if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
-              echo "ERROR: the version of the '${folder}' chart hasn't been bumped."
+              echo "ERROR: the version '$PR_CHART_VERSION' of the '${folder}' chart hasn't been bumped."
               exit 1
             fi
 
