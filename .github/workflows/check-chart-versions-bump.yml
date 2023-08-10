@@ -7,27 +7,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - id: list_modified_folders
-        name: List modified folders
+      - id: list_modified_chart_folders
+        name: List modified chart folders
         # if: github.ref != 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | grep "^charts/" | xargs dirname | sort --unique > modified_folders.txt
+          gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | grep "^charts/" | xargs dirname | cut -d "/" -f 2 | sort --unique > modified_chart_folders.txt
           
-          echo "= cat modified_folders.txt"
-          cat modified_folders.txt
+          echo "= cat modified_chart_folders.txt"
+          cat modified_chart_folders.txt
           
           # Store the modified folders as a step output
-          echo "modified_folders=$(cat modified_folders.txt)" >> $GITHUB_OUTPUT
+          echo "modified_chart_folders=$(cat modified_chart_folders.txt)" >> $GITHUB_OUTPUT
       - id: check-bump
         name: Check if every modified chart version has been bumped
         if: github.ref != 'refs/heads/main'
         run: |
           echo "= Check if every modified chart version has been bumped"
-          echo "steps.list_modified_folders.outputs.modified_folders: ${{ steps.list_modified_folders.outputs.modified_folders }}"
+          echo "steps.list_modified_chart_folders.outputs.modified_chart_folders: ${{ steps.list_modified_chart_folders.outputs.modified_chart_folders }}"
           # Read the modified folders from the previous step's output
-          IFS=$'\n' read -d '' -r -a folders <<< "${{ steps.list_modified_folders.outputs.modified_folders }}"
+          IFS=$'\n' read -d '' -r -a folders <<< "${{ steps.list_modified_chart_folders.outputs.modified_chart_folders }}"
 
           for folder in "${folders[@]}"; do
             echo "== folder: ${folder}:"
