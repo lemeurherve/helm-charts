@@ -30,11 +30,13 @@ jobs:
           awk -F/ '{print $1}' changes.txt | sort --unique > modified_folders.txt
           
           # Store the modified folders as a step output
-          echo "::set-output name=modified_folders::$(cat modified_folders.txt)"
+          echo "modified_folders=$(cat modified_folders.txt)" >> $GITHUB_OUTPUT
       - id: check-bump
         name: Check if every modified chart version has been bumped
         if: github.ref != 'refs/heads/main'
         run: |
+          echo "= Check if every modified chart version has been bumped"
+          echo "steps.list_modified_folders.outputs.modified_folders: ${{ steps.list_modified_folders.outputs.modified_folders }}"
           # Read the modified folders from the previous step's output
           IFS=$'\n' read -d '' -r -a folders <<< "${{ steps.list_modified_folders.outputs.modified_folders }}"
 
