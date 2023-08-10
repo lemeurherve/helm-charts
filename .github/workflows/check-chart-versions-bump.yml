@@ -12,10 +12,14 @@ jobs:
         if: github.ref != 'refs/heads/main'
         run: |
           echo "ls workspace"
-          ls ${{ github.workspace }}
+          echo "ls workspace"
+          echo "ls workspace"
+          
+          gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | grep "^charts/"
+
           # Get the list of modified files and folders
           # git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changes.txt
-          git diff --name-only ${{ github.event.after }} ${{ github.event.before }} > changes.txt
+          # git diff --name-only ${{ github.event.after }} ${{ github.event.before }} > changes.txt
 
           echo "cat changes.txt"
           cat changes.txt
