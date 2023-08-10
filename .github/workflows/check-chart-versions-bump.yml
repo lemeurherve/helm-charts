@@ -17,7 +17,7 @@ jobs:
           echo "ls workspace"
           echo "ls workspace"
           
-          gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | grep "^charts/"
+          gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | grep "^charts/" > changes.txt
 
           # Get the list of modified files and folders
           # git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changes.txt
