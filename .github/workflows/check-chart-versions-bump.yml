@@ -26,6 +26,10 @@ jobs:
         run: |
           git checkout -b $GITHUB_BASE_REF
           git checkout -b $GITHUB_HEAD_REF
+          echo "= fetch all prune"
+          git fetch --all --prune
+          echo "= branch all"
+          git branch --all
           
           for folder in $modified_chart_folders; do
             MAIN_CHART_VERSION=$(git show $GITHUB_BASE_REF:charts/$folder/Chart.yaml | grep "^version:")
