@@ -13,11 +13,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | grep "^charts/" > changes.txt
-          cat changes.txt
-
-          # Extract the unique folder paths
-          awk -F/ '{print $1}' changes.txt | sort --unique > modified_folders.txt
+          gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | grep "^charts/" | xargs dirname | sort --unique > modified_folders.txt
           
           echo "= cat modified_folders.txt"
           cat modified_folders.txt
