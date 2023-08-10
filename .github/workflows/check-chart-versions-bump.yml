@@ -30,7 +30,6 @@ jobs:
         if: github.ref != 'refs/heads/main'
         run: |
           echo "= Check if every modified chart version has been bumped"
-          echo "steps.list_modified_chart_folders.outputs.modified_chart_folders: ${{ steps.list_modified_chart_folders.outputs.modified_chart_folders }}"
           # Read the modified folders from the previous step's output
           IFS=$'\n' read -d '' -r -a folders <<< "${{ steps.list_modified_chart_folders.outputs.modified_chart_folders }}"
 
