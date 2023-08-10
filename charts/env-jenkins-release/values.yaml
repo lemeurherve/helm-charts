@@ -6,3 +6,4 @@ corePackages:
   shareName: 'shareName'
   websiteShareName: 'website'
   blobResourceGroupName: prodreleasecore
+  stuff: bob
