@@ -35,7 +35,8 @@ jobs:
           # MAIN_BRANCH=${GITHUB_REF#refs/heads/}
 
           for folder in $modified_chart_folders; do
-            MAIN_CHART_VERSION=$(git show $GITHUB_BASE_REF:charts/$folder/Chart.yaml | grep "^version:")
+            echo "== folder $folder"
+            MAIN_CHART_VERSION=$(git show $GITHUB_HEAD_REF:charts/$folder/Chart.yaml | grep "^version:")
             PR_CHART_VERSION=$(git show origin:charts/$folder/Chart.yaml | grep "^version:")
 
             if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
