@@ -11,8 +11,11 @@ jobs:
         name: List modified folders
         if: github.ref != 'refs/heads/main'
         run: |
+          ls ${{ github.workspace }}
           # Get the list of modified files and folders
-          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changes.txt
+          # git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changes.txt
+          git diff --name-only ${{ github.event.after }} ${{ github.event.before }} > changes.txt
+
 
           # Extract the unique folder paths
           awk -F/ '{print $1}' changes.txt | sort --unique > modified_folders.txt
