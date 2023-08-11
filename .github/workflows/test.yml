@@ -1,6 +1,8 @@
 name: Test Charts
 on:
-  push: null
+  push:
+    branches:
+      - main
   pull_request: null
   workflow_dispatch: null
 env:
@@ -8,8 +10,6 @@ env:
 jobs:
   find-modified-charts-with-unit-tests:
     runs-on: ubuntu-latest
-    # outputs:
-    #   modified_charts_with_unit_tests: ${{ steps.find-modified-charts-with-unit-tests.outputs.modified_charts_with_unit_tests }}
     outputs:
       charts_matrix: ${{ steps.list_modified_charts_with_unit_tests.outputs.modified_charts_with_unit_tests }}
     steps:
@@ -19,27 +19,25 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          env | sort
           # Retrieve the list of modified chart names
           modifiedChartPaths=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | cut -d "/" -f1-2 | grep "^charts/" | sort --unique)
 
           # Keep only modified charts with unit tests
-          modifiedChartsWithUnitTestsArray=()
+          modifiedChartsWithUnitTests=()
           for chartName in "$modifiedChartPaths"; do
               path="${chartName}/tests"
               if [ -d "$path" ]; then
-                  modifiedChartsWithUnitTestsArray+=("$(echo $chartName | cut -d '/' -f 2)")
+                  modifiedChartsWithUnitTests+=("$(echo $chartName | cut -d '/' -f 2)")
               fi
           done
 
-          if [ -n "$modifiedChartsWithUnitTestsArray" ]; then
-            # printf -v modifiedChartsWithUnitTests "%s\n" "${modifiedChartsWithUnitTestsArray[@]}"
+          
+          git diff --name-only ${{ github.event.before }}..${{ github.sha }}       
 
-            # # Transform the multiline value into a JSON array
-            # jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input --slurp 'split("\n") | map(select(length > 0))' | tr -d '\n')
-
-
+          if [ -n "$modifiedChartsWithUnitTests" ]; then
             # Transform the array into a JSON
-            jsonArray=$(printf "%s\n" "${modifiedChartsWithUnitTestsArray[@]}" | jq --raw-input --slurp 'split("\n") | map(select(length > 0))' | tr -d '\n')
+            jsonArray=$(printf "%s\n" "${modifiedChartsWithUnitTests[@]}" | jq --raw-input --slurp 'split("\n") | map(select(length > 0))' | tr -d '\n')
             jsonContent="{\"chart\": ${jsonArray}}"
 
             # Store the JSON as step output
