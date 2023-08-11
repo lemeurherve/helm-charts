@@ -20,8 +20,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           env | sort
-          # Retrieve the list of modified chart names
-          modifiedChartPaths=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | cut -d "/" -f1-2 | grep "^charts/" | sort --unique)
+
+          if [ "$GITHUB_EVENT_NAME" -eq "pull_request" ]; then
+            echo "= PR"
+            # Retrieve the list of modified chart names in the pull request
+            modifiedChartPaths=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | cut -d "/" -f1-2 | grep "^charts/" | sort --unique)
+          else
+            echo "= push main"
+            # Retrieve the list of modified chart names in the last commit
+            git diff --name-only ${{ github.event.before }}..${{ github.sha }}
+            modifiedChartPaths=$(git diff --name-only ${{ github.event.before }}..${{ github.sha }} | xargs dirname | cut -d "/" -f1-2 | grep "^charts/" | sort --unique)
+          fi
 
           # Keep only modified charts with unit tests
           modifiedChartsWithUnitTests=()
@@ -31,9 +40,6 @@ jobs:
                   modifiedChartsWithUnitTests+=("$(echo $chartName | cut -d '/' -f 2)")
               fi
           done
-
-          
-          git diff --name-only ${{ github.event.before }}..${{ github.sha }}       
 
           if [ -n "$modifiedChartsWithUnitTests" ]; then
             # Transform the array into a JSON
