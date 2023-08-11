@@ -23,13 +23,13 @@ jobs:
       - id: check_bump
         name: Check if chart version has been bumped
         run: |
-          git checkout -b $GITHUB_BASE_REF
+          # git checkout -b $GITHUB_BASE_REF
           git checkout -b $GITHUB_HEAD_REF
           
           for folder in $modified_chart_folders; do
 
             echo "== chart.yaml on $GITHUB_BASE_REF:"
-            git show $GITHUB_BASE_REF:charts/$folder/Chart.yaml
+            git show origin:charts/$folder/Chart.yaml
             echo "== chart.yaml on $GITHUB_HEAD_REF:"
             git show $GITHUB_HEAD_REF:charts/$folder/Chart.yaml
             echo "== next"
