@@ -21,8 +21,10 @@ jobs:
           
           # Retrieve the list of modified folder names
           modifiedFolders=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname)
+          echo "= modifiedFolders: $modifiedFolders"
           # Extract charts with unit tests from the modified folders
           modifiedChartsWithUnitTests=$(echo $modifiedFolders | grep "^charts/" | grep -v "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique)
+          echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
           
           # Transform the multiline value into a JSON array
           jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input --slurp 'split("\n") | map(select(length > 0))')
@@ -32,8 +34,10 @@ jobs:
                     
           # Store the chart name(s) as JSON if there are results
           if [ -n "$modifiedChartsWithUnitTests" ]; then
+            echo "= not empty"
             echo "modified_charts_with_unit_tests={\"chart\": $jsonArray}" >> "$GITHUB_OUTPUT"
           else
+            echo "= empty"
             echo "modified_charts_with_unit_tests=''" >> "$GITHUB_OUTPUT"
           fi
 
