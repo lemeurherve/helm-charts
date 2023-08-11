@@ -28,21 +28,22 @@ jobs:
             echo "= PR"
             # Retrieve the list of modified chart names in the pull request
             modifiedChartPaths=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | cut -d "/" -f1-2 | grep "^charts/" | sort --unique)
+            echo "modifiedChartPaths: $modifiedChartPaths"
           else
             # Retrieve all charts
             modifiedChartPaths=$(find . -maxdepth 2 -type d | cut -d "/" -f2-3 | grep "^charts/" | sort --unique)
             echo "modifiedChartPaths: $modifiedChartPaths"
-            # TODO: Retrieve only the list of modified chart names in the last commit since the push
-            git fetch --all
-            echo "= diff name-only"
-            git diff --name-only 
-            echo "= diff name-only after"
-            git diff --name-only ${{github.event.after}}
-            # echo "= diff name-only before"
-            # git diff --name-only ${{github.event.before}}
-            # echo "= diff name-only before..after"
-            git switch ${{ github.ref_name }}
-            git diff --name-only ${{github.event.before}}..${{github.event.after}}
+            # # TODO: Retrieve only the list of modified chart names in the last commit since the push
+            # git fetch --all
+            # echo "= diff name-only"
+            # git diff --name-only 
+            # echo "= diff name-only after"
+            # git diff --name-only ${{github.event.after}}
+            # # echo "= diff name-only before"
+            # # git diff --name-only ${{github.event.before}}
+            # # echo "= diff name-only before..after"
+            # git switch ${{ github.ref_name }}
+            # git diff --name-only ${{github.event.before}}..${{github.event.after}}
           fi
 
           # Keep only modified charts with unit tests
