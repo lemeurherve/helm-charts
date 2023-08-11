@@ -48,7 +48,7 @@ jobs:
 
           # IFS=$'\n'
           # for chartName in "$modifiedChartPaths"; do
-          while IFS= read -r line; do
+          while IFS= read -r chartName; do
               echo ":: chartName: $chartName"
               path="${chartName}/tests"
               echo ":: path: $path"
@@ -57,7 +57,7 @@ jobs:
           # Keep only modified charts with unit tests
           modifiedChartsWithUnitTests=()
           # for chartName in "$modifiedChartPaths"; do
-          while IFS= read -r line; do
+          while IFS= read -r chartName; do
               path="${chartName}/tests"
               echo "== test path: $path"
               if [ -d "$path" ]; then
