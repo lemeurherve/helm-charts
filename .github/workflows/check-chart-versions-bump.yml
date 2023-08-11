@@ -23,24 +23,12 @@ jobs:
       - id: check_bump
         name: Check if chart version has been bumped
         run: |
-          echo "env sort:"
-          env | sort
-          echo "== next"
-          # git checkout -b $GITHUB_BASE_REF
-          # git checkout -b $GITHUB_HEAD_REF
           git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-branch
           git fetch origin ${{ github.event.pull_request.base.ref }}:target-branch
           
           notBumped = false
 
           for folder in $modified_chart_folders; do
-
-            echo "== chart.yaml on $GITHUB_BASE_REF:"
-            git show target-branch:charts/$folder/Chart.yaml
-            echo "== chart.yaml on $GITHUB_HEAD_REF:"
-            git show pr-branch:charts/$folder/Chart.yaml
-            echo "== next"
-
             MAIN_CHART_VERSION=$(git show target-branch:charts/$folder/Chart.yaml | grep "^version:")
             PR_CHART_VERSION=$(git show pr-branch:charts/$folder/Chart.yaml | grep "^version:")
             
@@ -48,10 +36,11 @@ jobs:
             echo "$folder PR_CHART_VERSION: $PR_CHART_VERSION"
 
             if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
-              echo "ERROR: the version '$PR_CHART_VERSION' of the '${folder}' chart hasn't been bumped."
+              echo "ERROR: the version of the '${folder}' chart hasn't been bumped: '$PR_CHART_VERSION'"
               notBumped = true
             fi
 
-            echo "The version of the '${folder}' chart has been bumped."
+            echo "The version of the '${folder}' chart has been bumped: '$MAIN_CHART_VERSION' > '$PR_CHART_VERSION'"
           done
+
           if notBumped exit 1
