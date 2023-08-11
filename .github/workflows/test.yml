@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.find-modified-charts-with-unit-tests.outputs.modified_charts_with_unit_tests != '' }}  # Without it, the strategy parser will fail if the changed_directories is empty.
     strategy:
-      matrix: ${{fromJson($modified_charts_with_unit_tests)}}
+      matrix: ${{fromJson(needs.find-modified-charts-with-unit-tests.outputs.modified_charts_with_unit_tests)}}
         # chart:
         #   - accountapp
         #   - artifact-caching-proxy
