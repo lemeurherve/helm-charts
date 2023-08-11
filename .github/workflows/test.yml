@@ -34,7 +34,7 @@ jobs:
               fi
           done
 
-          if if [ -z "$modifiedChartsWithUnitTestsArray" ]; then
+          if [ -z "$modifiedChartsWithUnitTestsArray" ]; then
             modifiedChartsWithUnitTests=$(printf "%s\n" "${modifiedChartsWithUnitTestsArray[@]}")
             echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
 
