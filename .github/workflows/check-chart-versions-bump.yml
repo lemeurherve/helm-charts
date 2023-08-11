@@ -23,7 +23,10 @@ jobs:
       - id: check_bump
         name: Check if chart version has been bumped
         run: |
-          # git checkout -b $GITHUB_BASE_REF
+          echo "env sort:"
+          env | sort
+          echo "== next"
+          git checkout -b $GITHUB_BASE_REF
           git checkout -b $GITHUB_HEAD_REF
           
           for folder in $modified_chart_folders; do
