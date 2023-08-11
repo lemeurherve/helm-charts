@@ -23,8 +23,8 @@ jobs:
       - id: check_bump
         name: Check if chart version has been bumped
         run: |
-          git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-branch
-          git fetch origin ${{ github.event.pull_request.base.ref }}:target-branch
+          git fetch --quiet origin pull/${{ github.event.pull_request.number }}/head:pr-branch
+          git fetch --quiet origin ${{ github.event.pull_request.base.ref }}:target-branch
           
           notBumped = false
 
