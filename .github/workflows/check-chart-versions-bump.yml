@@ -26,15 +26,19 @@ jobs:
         run: |
           git checkout -b $GITHUB_BASE_REF
           git checkout -b $GITHUB_HEAD_REF
+          echo "GITHUB_BASE_REF: '$GITHUB_BASE_REF'
+          echo "GITHUB_HEAD_REF: '$PR_CHART_VERSION'
+          
+          git show $GITHUB_HEAD_REF:charts/$folder/Chart.yaml
           
           for folder in $modified_chart_folders; do
             MAIN_CHART_VERSION=$(git show $GITHUB_BASE_REF:charts/$folder/Chart.yaml | grep "^version:")
             PR_CHART_VERSION=$(git show $GITHUB_HEAD_REF:charts/$folder/Chart.yaml | grep "^version:")
             
             echo "MAIN_CHART_VERSION: '$MAIN_CHART_VERSION'
-            echo "PR_CHART_VERSION: '$PR_CHART_VERSION'
-            echo "MAIN_CHART_VERSIONcharts/$folder/Chart.yaml: '$MAIN_CHART_VERSION'
-            echo "PR_CHART_VERSIONcharts/$folder/Chart.yaml: '$PR_CHART_VERSION'
+            echo "PR_CHART_VERSION: '$PR_CHART_VERSION'"
+            echo "MAIN_CHART_VERSIONcharts/$folder/Chart.yaml: '$MAIN_CHART_VERSION'"
+            echo "PR_CHART_VERSIONcharts/$folder/Chart.yaml: '$PR_CHART_VERSION'"
 
             if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
               echo "ERROR: the version '$PR_CHART_VERSION' of the '${folder}' chart hasn't been bumped."
