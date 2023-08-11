@@ -31,51 +31,24 @@ jobs:
               fi
           done
 
-          echo "== array OK"
-
           if [ -n "$modifiedChartsWithUnitTestsArray" ]; then
-            # modifiedChartsWithUnitTests="$(printf "%s\n" "${modifiedChartsWithUnitTestsArray[@]}")"
-            printf -v modifiedChartsWithUnitTests "%s\n" "${modifiedChartsWithUnitTestsArray[@]}"
-            echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
+            # printf -v modifiedChartsWithUnitTests "%s\n" "${modifiedChartsWithUnitTestsArray[@]}"
 
-            # Transform the multiline value into a JSON array
-            jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input --slurp 'split("\n") | map(select(length > 0))' | tr -d '\n')
+            # # Transform the multiline value into a JSON array
+            # jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input --slurp 'split("\n") | map(select(length > 0))' | tr -d '\n')
 
-            # Print the JSON array
-            echo "= jsonArray: $jsonArray"
+
+            # Transform the array into a JSON
+            jsonArray=$(printf "%s\n" "${modifiedChartsWithUnitTestsArray[@]}" | jq --raw-input --slurp 'split("\n") | map(select(length > 0))' | tr -d '\n')
             jsonContent="{\"chart\": ${jsonArray}}"
 
-            echo "= jsonContent: $jsonContent"
-
+            # Store the JSON as step output
             echo "modified_charts_with_unit_tests=$jsonContent" >> "$GITHUB_OUTPUT"
           else
             echo "= no modified chart with unit tests found."
+            # Store the JSON as step output
             echo "modified_charts_with_unit_tests=''" >> "$GITHUB_OUTPUT"
           fi
-
-      # - name: 'Set output in the matrix format'
-      #   id: set-output
-      #   run: echo "modified_charts_with_unit_tests={\"dir\":${{ steps.changed-files.outputs.all_changed_files }}}" >> "$GITHUB_OUTPUT"
-
-  # do-stuff:
-  #   runs-on: ubuntu-latest
-  #   if: ${{ needs.find-out-changes.outputs.changed_directories != '' }}  # Without it, the strategy parser will fail if the changed_directories is empty.
-  #   strategy:
-  #     matrix: ${{fromJson(needs.find-out-changes.outputs.changed_directories)}}
-  #   needs:
-  #     - find-out-changes
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - run: zip ${{ matrix.dir }} etc.
-
-
-  job2:
-    runs-on: ubuntu-latest
-    needs: find-modified-charts-with-unit-tests
-    steps:
-      - env:
-          OUTPUT1: ${{needs.find-modified-charts-with-unit-tests.outputs.charts_matrix}}
-        run: echo "$OUTPUT1"
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -83,14 +56,6 @@ jobs:
     if: ${{ needs.find-modified-charts-with-unit-tests.outputs.charts_matrix != '' }}  # Without it, the strategy parser will fail if the changed_directories is empty.
     strategy:
       matrix: ${{fromJson(needs.find-modified-charts-with-unit-tests.outputs.charts_matrix)}}
-        # chart:
-        #   - accountapp
-        #   - artifact-caching-proxy
-        #   - httpredirector
-        #   - jenkins-jobs
-        #   - jenkins-kubernetes-agents
-        #   - mirrorbits
-        #   - plugin-health-scoring
       fail-fast: false
     steps:
       - name: Checkout
