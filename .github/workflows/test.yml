@@ -46,25 +46,24 @@ jobs:
             # git diff --name-only ${{github.event.before}}..${{github.event.after}}
           fi
 
-          IFS=$'\n'
-          for chartName in "$modifiedChartPaths"; do
-              echo "chartName: $chartName"
+          # IFS=$'\n'
+          # for chartName in "$modifiedChartPaths"; do
+          while IFS= read -r line; do
+              echo ":: chartName: $chartName"
               path="${chartName}/tests"
-              echo "== test path: $path"
-              if [ -d "$path" ]; then
-                  modifiedChartsWithUnitTests+=("$(echo $chartName | cut -d '/' -f 2)")
-              fi
-          done
+              echo ":: path: $path"
+          done <<< "$modifiedChartPaths"
 
           # Keep only modified charts with unit tests
           modifiedChartsWithUnitTests=()
-          for chartName in "$modifiedChartPaths"; do
+          # for chartName in "$modifiedChartPaths"; do
+          while IFS= read -r line; do
               path="${chartName}/tests"
               echo "== test path: $path"
               if [ -d "$path" ]; then
                   modifiedChartsWithUnitTests+=("$(echo $chartName | cut -d '/' -f 2)")
               fi
-          done
+          done <<< "$modifiedChartPaths"
 
           if [ -n "$modifiedChartsWithUnitTests" ]; then
             # Transform the array into a JSON
