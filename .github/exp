@@ -1,0 +1,50 @@
+name: Generate SemVer Version
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  generate-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Git
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+
+    - name: Generate version
+      id: generate_version
+      run: |
+        major=0
+        minor=0
+        patch=0
+        
+        # Retrieve the pull request commit messages
+        commit_messages=$(git log --pretty=format:"%s" ${{ github.event.before }}..${{ github.sha }})
+
+        for line in $commit_messages; do
+          case "$line" in
+            feat:*) ((major++));;
+            fix:*) ((minor++));;
+            chore:*) ((patch++));;
+            *)
+              # Default to patch if no specific type matches
+              ((patch++));;
+          esac
+        done
+
+        echo "VERSION=$major.$minor.$patch" >> $GITHUB_ENV
+        echo "Generated version: $major.$minor.$patch"
+
+    - name: Set output version
+      run: echo "Version ${{ env.VERSION }}" >> $GITHUB_ENV
+
+    - name: Use the output version
+      run: echo "The generated version is $VERSION"
