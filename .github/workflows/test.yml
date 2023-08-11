@@ -30,7 +30,8 @@ jobs:
             modifiedChartPaths=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | cut -d "/" -f1-2 | grep "^charts/" | sort --unique)
           else
             # TODO: Retrieve only the list of modified chart names in the last commit
-            git fetch origin ${{ github.ref_name }}
+            # git fetch origin ${{ github.ref_name }}
+            git checkout -b ${{ github.ref_name }}
             echo "= diff name-only"
             git diff --name-only 
             echo "= diff name-only after"
