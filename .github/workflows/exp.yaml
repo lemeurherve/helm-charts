@@ -51,7 +51,7 @@ jobs:
         patch=0
 
         # Fetch pull request commits using GitHub API
-        commit_messages=$(cgh pr view ${{ github.event.pull_request.number }} --json "commits" | jq -r '.commits[] | .messageHeadline')
+        commit_messages=$(gh pr view ${{ github.event.pull_request.number }} --json "commits" | jq -r '.commits[] | .messageHeadline')
 
         echo "= commit_messages: $commit_messages"
         echo "==="
