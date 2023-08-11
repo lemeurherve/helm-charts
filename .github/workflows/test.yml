@@ -50,6 +50,7 @@ jobs:
           modifiedChartsWithUnitTests=()
           for chartName in "$modifiedChartPaths"; do
               path="${chartName}/tests"
+              echo "== test path: $path"
               if [ -d "$path" ]; then
                   modifiedChartsWithUnitTests+=("$(echo $chartName | cut -d '/' -f 2)")
               fi
