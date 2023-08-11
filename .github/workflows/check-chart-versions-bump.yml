@@ -30,6 +30,8 @@ jobs:
           # git checkout -b $GITHUB_HEAD_REF
           git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-branch
           git fetch origin ${{ github.event.pull_request.base.ref }}:target-branch
+          
+          notBumped = false
 
           for folder in $modified_chart_folders; do
 
@@ -47,8 +49,9 @@ jobs:
 
             if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
               echo "ERROR: the version '$PR_CHART_VERSION' of the '${folder}' chart hasn't been bumped."
-              exit 1
+              notBumped = true
             fi
 
             echo "The version of the '${folder}' chart has been bumped."
           done
+          if notBumped exit 1
