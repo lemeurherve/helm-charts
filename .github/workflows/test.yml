@@ -23,8 +23,8 @@ jobs:
           modifiedFolders=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname)
           echo "= modifiedFolders: $modifiedFolders"
           # Extract charts with unit tests from the modified folders
-          modifiedChartFoldersOnly=$(echo $modifiedFolders | grep "^charts/")
-          echo "= modifiedChartFoldersOnly: $modifiedChartFoldersOnly"
+          modifiedChartNamesOnly=$(echo $modifiedFolders | grep "^charts/" | cut -d "/" -f 2 | sort --unique)
+          echo "= modifiedChartNamesOnly: $modifiedChartNamesOnly"
 
 
           # modifiedCharts | grep --invert-match "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique)
@@ -33,16 +33,16 @@ jobs:
 
           # Keep only modified charts with unit tests
           modifiedChartsWithUnitTestsArray=()
-          for folder in "$modifiedChartFoldersOnly"; do
-              path="${folder}/tests"
-              echo "= test folder $folder path $path"
+          for chartName in "$modifiedChartNamesOnly"; do
+              path="charts/${chartName}/tests"
+              echo "= test $chartName, path $path"
               if [ -d "$path" ]; then
-                  echo "= test folder $folder has unit test(s)"
-                  modifiedChartsWithUnitTestsArray+=("$folder")
+                  echo "= test $chartName has unit test(s)"
+                  modifiedChartsWithUnitTestsArray+=("$chartName")
               fi
           done
 
-          if [ ${#modifiedChartsWithUnitTestsArray[@]} -eq 0 ]; then
+          if [ ${#modifiedChartsWithUnitTestsArray[@]} -gt 0 ]; then
             modifiedChartsWithUnitTests=$(printf "%s\n" "${modifiedChartsWithUnitTestsArray[@]}")
             echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
 
