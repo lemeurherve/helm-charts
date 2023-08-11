@@ -6,10 +6,67 @@ on:
 env:
   UNITTEST_VERSION: v0.3.4
 jobs:
+  find-modified-charts-with-unit-tests:
+    runs-on: ubuntu-latest
+    # outputs:
+    #   modified_charts_with_unit_tests: ${{ steps.find-modified-charts-with-unit-tests.outputs.modified_charts_with_unit_tests }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: list_modified_charts_with_unit_tests
+        name: List modified charts with unit tests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | grep "^charts/" | grep -v "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique > modified_charts_with_unit_tests.txt
+          
+          # Retrieve the list of modified folder names
+          modifiedFolders=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname)
+          # Extract charts with unit tests from the modified folders
+          modifiedChartsWithUnitTests=$(echo $modifiedFolders | grep "^charts/" | grep -v "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique)
+          
+          # Transform the multiline value into a JSON array
+          jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input -slurp 'split("\n") | map(select(length > 0))')
+
+          # Print the JSON array
+          echo "$jsonArray"
+                    
+          # Store the chart name(s) as JSON if there are results
+          if [ -n "$modifiedChartsWithUnitTests" ]; then
+            echo "modified_charts_with_unit_tests={\"chart\": $jsonArray}" >> "$GITHUB_OUTPUT"
+          else
+            echo "modified_charts_with_unit_tests=''" >> "$GITHUB_OUTPUT"
+          fi
+
+      # - name: 'Set output in the matrix format'
+      #   id: set-output
+      #   run: echo "modified_charts_with_unit_tests={\"dir\":${{ steps.changed-files.outputs.all_changed_files }}}" >> "$GITHUB_OUTPUT"
+
+  # do-stuff:
+  #   runs-on: ubuntu-latest
+  #   if: ${{ needs.find-out-changes.outputs.changed_directories != '' }}  # Without it, the strategy parser will fail if the changed_directories is empty.
+  #   strategy:
+  #     matrix: ${{fromJson(needs.find-out-changes.outputs.changed_directories)}}
+  #   needs:
+  #     - find-out-changes
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - run: zip ${{ matrix.dir }} etc.
+
+
+
   unit-tests:
     runs-on: ubuntu-latest
+    if: ${{ needs.find-modified-charts-with-unit-tests.outputs.modified_charts_with_unit_tests != '' }}  # Without it, the strategy parser will fail if the changed_directories is empty.
     strategy:
-      matrix: {}
+      matrix: ${{fromJson($modified_charts_with_unit_tests)}}
+        # chart:
+        #   - accountapp
+        #   - artifact-caching-proxy
+        #   - httpredirector
+        #   - jenkins-jobs
+        #   - jenkins-kubernetes-agents
+        #   - mirrorbits
+        #   - plugin-health-scoring
       fail-fast: false
     steps:
       - name: Checkout
