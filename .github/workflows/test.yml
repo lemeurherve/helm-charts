@@ -32,16 +32,17 @@ jobs:
           echo "== array OK"
 
           if [ -n "$modifiedChartsWithUnitTestsArray" ]; then
-            modifiedChartsWithUnitTests="$(printf "%s\n" "${modifiedChartsWithUnitTestsArray[@]}")"
+            # modifiedChartsWithUnitTests="$(printf "%s\n" "${modifiedChartsWithUnitTestsArray[@]}")"
+            printf -v modifiedChartsWithUnitTests "%s\n" "${modifiedChartsWithUnitTestsArray[@]}"
             echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
 
             # Transform the multiline value into a JSON array
             jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input --slurp 'split("\n") | map(select(length > 0))')
 
             # Print the JSON array
-            echo "$jsonArray"
+            echo "= jsonArray: $jsonArray"
 
-            echo "modified_charts_with_unit_tests={\"chart\": $jsonArray}" >> "$GITHUB_OUTPUT"
+            echo "modified_charts_with_unit_tests={\"chart\": ${jsonArray}}" >> "$GITHUB_OUTPUT"
           else
             echo "= no modified chart with unit tests found."
             echo "modified_charts_with_unit_tests=''" >> "$GITHUB_OUTPUT"
