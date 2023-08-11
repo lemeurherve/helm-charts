@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   accountapp:
   - apiVersion: v1
+    created: "2023-08-11T16:36:57.759564211Z"
+    description: A Helm chart for accounts.jenkins.io
+    digest: 79a26754f5a3ff908bb410da68866b0a6fde2b6ca7dc11aa101ecb09dedd3f35
+    maintainers:
+    - name: timja
+    name: accountapp
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/accountapp-0.5.26/accountapp-0.5.26.tgz
+    version: 0.5.26
+  - apiVersion: v1
     created: "2021-11-09T11:57:00.007899003Z"
     description: A Helm chart for accounts.jenkins.io
     digest: 2387e7a3764ef51ba32761cefabf1abfec2d8babb9b9c610eb669669ff41a4f5
@@ -65,6 +75,15 @@ entries:
     - https://github.com/jenkins-infra/public-charts/releases/download/acme-0.1.0/acme-0.1.0.tgz
     version: 0.1.0
   artifact-caching-proxy:
+  - apiVersion: v2
+    created: "2023-08-11T16:36:57.86192463Z"
+    description: artifact-caching-proxy is a Nginx caching proxy in front of repo.jenkins-ci.org
+    digest: 38528bba367a3eb65a9fade41c137c282b9fb9b29fcb894e729a414ca6d0454f
+    name: artifact-caching-proxy
+    type: application
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/artifact-caching-proxy-0.11.1/artifact-caching-proxy-0.11.1.tgz
+    version: 0.11.1
   - apiVersion: v2
     created: "2022-09-21T13:54:34.455271769Z"
     description: artifact-caching-proxy is a Nginx caching proxy in front of repo.jenkins-ci.org
@@ -137,6 +156,14 @@ entries:
     version: 0.1.0
   env-jenkins-release:
   - apiVersion: v1
+    created: "2023-08-11T16:36:57.97175796Z"
+    description: Jenkins Release Environment Chart
+    digest: 2937c1342670119e1a775b82e9c00fdc02bcdf296f457232d312968fb58cf62d
+    name: env-jenkins-release
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/env-jenkins-release-0.2.0/env-jenkins-release-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v1
     created: "2022-09-21T13:54:35.256851073Z"
     description: Jenkins Release Environment Chart
     digest: 191195e2719ca6508e117d8443bfd1e844fb26bf09a2a8ee4e8a5214757a1064
@@ -154,6 +181,15 @@ entries:
     version: 0.1.1
   httpredirector:
   - apiVersion: v2
+    created: "2023-08-11T16:36:58.076686417Z"
+    description: A Helm chart to create an http redirection
+    digest: d5c666799d3a0c53199aac8c01498b1d14b7a219af51fb939746602e8c4bdec2
+    name: httpredirector
+    type: application
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/httpredirector-0.3.1/httpredirector-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v2
     created: "2022-09-21T13:54:35.545860525Z"
     description: A Helm chart to create an http redirection
     digest: 911ab8d855428957c79ca3e8d5c0dc0a83f6f0437de4d8ced4ebbc88abf6ba45
@@ -163,6 +199,14 @@ entries:
     - https://github.com/lemeurherve/helm-charts/releases/download/httpredirector-0.3.0/httpredirector-0.3.0.tgz
     version: 0.3.0
   incrementals-publisher:
+  - apiVersion: v1
+    created: "2023-08-11T16:36:58.203474799Z"
+    description: incrementals-publisher
+    digest: d3331d73d263f8f1f36762265dc19e4957ed1664b1dd845e9dc26460baf7f618
+    name: incrementals-publisher
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/incrementals-publisher-0.5.8/incrementals-publisher-0.5.8.tgz
+    version: 0.5.8
   - apiVersion: v1
     created: "2022-09-21T13:54:35.815909522Z"
     description: incrementals-publisher
@@ -180,7 +224,29 @@ entries:
     urls:
     - https://github.com/jenkins-infra/public-charts/releases/download/incrementals-publisher-0.3.0/incrementals-publisher-0.3.0.tgz
     version: 0.3.0
+  ipv6-lb-service:
+  - apiVersion: v2
+    created: "2023-08-11T16:36:58.312673519Z"
+    description: A Helm chart for Kubernetes to add an additional LB service dedicated
+      to IPv6
+    digest: 1de413a49a7ca4016edc1a9f25f4ac9937e65916f26393fa2d73d8de41057fe1
+    name: ipv6-lb-service
+    type: application
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/ipv6-lb-service-0.1.0/ipv6-lb-service-0.1.0.tgz
+    version: 0.1.0
   ircbot:
+  - apiVersion: v1
+    created: "2023-08-11T16:36:58.429443652Z"
+    description: A Helm chart for ircbot
+    digest: 9bb9c13709696d7d822142a6b021bf32e66cd2572d1f7e0028f02ee1d59841cf
+    maintainers:
+    - name: timja
+    - name: slide
+    name: ircbot
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/ircbot-0.2.10/ircbot-0.2.10.tgz
+    version: 0.2.10
   - apiVersion: v1
     created: "2022-09-21T13:54:36.096090927Z"
     description: A Helm chart for ircbot
@@ -193,6 +259,17 @@ entries:
     - https://github.com/lemeurherve/helm-charts/releases/download/ircbot-0.1.0/ircbot-0.1.0.tgz
     version: 0.1.0
   javadoc:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2023-08-11T16:36:58.545008667Z"
+    description: A Helm chart for javadoc.jenkins.io
+    digest: a1c9b636ff5befdf46ef3711de49118736195a91efc73e7cb9d49247f5b61c76
+    maintainers:
+    - name: timja
+    name: javadoc
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/javadoc-0.2.0/javadoc-0.2.0.tgz
+    version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
     created: "2022-09-21T13:54:36.367524125Z"
@@ -287,6 +364,18 @@ entries:
   jenkins-jobs:
   - apiVersion: v1
     appVersion: "1.0"
+    created: "2023-08-11T16:36:58.65439409Z"
+    description: Jenkins Jobs Definition from YAML to job-dsl
+    digest: 6bfcf22f1210977b60ec7bb08933003ad1189a398b14edf2968cbed5a192d706
+    icon: https://jenkins.io/images/logos/plumber/256.png
+    maintainers:
+    - name: Damien Duportal <damien.duportal@gmail.com>
+    name: jenkins-jobs
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/jenkins-jobs-0.4.1/jenkins-jobs-0.4.1.tgz
+    version: 0.4.1
+  - apiVersion: v1
+    appVersion: "1.0"
     created: "2022-09-21T13:54:36.935207341Z"
     description: Jenkins Jobs Definition from YAML to job-dsl
     digest: fd5043800490f28894dd8eb573af1687880456e25a4ffa234a200b42f4b7db7d
@@ -298,6 +387,16 @@ entries:
     - https://github.com/lemeurherve/helm-charts/releases/download/jenkins-jobs-0.4.0/jenkins-jobs-0.4.0.tgz
     version: 0.4.0
   jenkins-kubernetes-agents:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-08-11T16:36:58.777560017Z"
+    description: A Helm chart for using Jenkins Kubernetes agents on a remote cluster
+    digest: cd76350dbd9ee65b8e9be8a0a969e19a85907cd475c53040cdfde54987fa65af
+    name: jenkins-kubernetes-agents
+    type: application
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/jenkins-kubernetes-agents-0.5.1/jenkins-kubernetes-agents-0.5.1.tgz
+    version: 0.5.1
   - apiVersion: v2
     appVersion: 0.1.0
     created: "2022-09-21T13:54:37.189226826Z"
@@ -329,6 +428,17 @@ entries:
     - https://github.com/jenkins-infra/public-charts/releases/download/jenkins-wiki-exporter-0.5.0/jenkins-wiki-exporter-0.5.0.tgz
     version: 0.5.0
   jenkinsio:
+  - apiVersion: v1
+    created: "2023-08-11T16:36:58.901142951Z"
+    description: A Helm chart for jenkins.io
+    digest: e6b10975fdc50c15003db660f9c878c728648d95e8f96217428ba35b03fc4735
+    maintainers:
+    - name: timja
+    - name: dduportal
+    name: jenkinsio
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/jenkinsio-0.5.0/jenkinsio-0.5.0.tgz
+    version: 0.5.0
   - apiVersion: v1
     created: "2022-09-21T13:54:37.599175426Z"
     description: A Helm chart for jenkins.io
@@ -416,6 +526,18 @@ entries:
     version: 0.0.2
   mirrorbits:
   - apiVersion: v1
+    appVersion: v0.5.2
+    created: "2023-08-11T16:36:59.013000711Z"
+    description: Mirrobits helm chart for Kubernetes
+    digest: df78d752a580ce174e8e576ef84b5fe7b0d23538d47584062d7facce011b8250
+    maintainers:
+    - email: me@olblak.com
+      name: olblak
+    name: mirrorbits
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/mirrorbits-0.56.0/mirrorbits-0.56.0.tgz
+    version: 0.56.0
+  - apiVersion: v1
     appVersion: v0.5.1
     created: "2022-09-21T13:54:38.130189614Z"
     description: Mirrobits helm chart for Kubernetes
@@ -453,6 +575,15 @@ entries:
     version: 0.1.1
   plugin-health-scoring:
   - apiVersion: v2
+    created: "2023-08-11T16:36:59.152198377Z"
+    description: A Helm chart for Kubernetes
+    digest: 2f2b8edbd3d653495c98730e9fbd297ad3f19173f1c418053bd47e95c8567811
+    name: plugin-health-scoring
+    type: application
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/plugin-health-scoring-2.1.10/plugin-health-scoring-2.1.10.tgz
+    version: 2.1.10
+  - apiVersion: v2
     created: "2022-09-21T13:54:38.431131835Z"
     description: A Helm chart for Kubernetes
     digest: f67a864ea3fdb22acba69b1e4bb6d02d4ec9d1e6986904ac2da2c2331da8ffc5
@@ -462,6 +593,18 @@ entries:
     - https://github.com/lemeurherve/helm-charts/releases/download/plugin-health-scoring-1.1.0/plugin-health-scoring-1.1.0.tgz
     version: 1.1.0
   plugin-site:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2023-08-11T16:36:59.304085731Z"
+    description: A Helm chart for plugins.jenkins.io
+    digest: 2049a06e6430b0dfab416adb76b72ee0f92848764b18eb89f91b275d6144e6aa
+    maintainers:
+    - name: timja
+    - name: halkeye
+    name: plugin-site
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/plugin-site-0.1.0/plugin-site-0.1.0.tgz
+    version: 0.1.0
   - apiVersion: v1
     appVersion: "1.0"
     created: "2022-09-21T13:54:38.708532137Z"
@@ -489,6 +632,16 @@ entries:
   plugin-site-issues:
   - apiVersion: v2
     appVersion: 0.3.0
+    created: "2023-08-11T16:36:59.41726571Z"
+    description: plugin-site-issues
+    digest: 44e7eca8d96a1af61d3a78348bbf796bc87b3ba09f0f97047a79db5b5964bd13
+    name: plugin-site-issues
+    type: application
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/plugin-site-issues-0.1.7/plugin-site-issues-0.1.7.tgz
+    version: 0.1.7
+  - apiVersion: v2
+    appVersion: 0.3.0
     created: "2022-09-21T13:54:38.957046919Z"
     description: plugin-site-issues
     digest: cb62cb76f7bc41e8001ebc218e99f72186d77e5460bc83eb20e5b8448b94bd92
@@ -500,6 +653,16 @@ entries:
   rating:
   - apiVersion: v2
     appVersion: "1.0"
+    created: "2023-08-11T16:36:59.541219949Z"
+    description: A Helm chart for Kubernetes
+    digest: 0266633bbb45a9db2655c1d00c8b4d1233b374e70924ff3fa5ac575c495816e8
+    name: rating
+    type: application
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/rating-0.2.1/rating-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: "1.0"
     created: "2022-09-21T13:54:39.315482681Z"
     description: A Helm chart for Kubernetes
     digest: d6058a92f35fc6370d6df59fe6b4d800cb3829894b94bdbd51a3d80438f777f9
@@ -509,6 +672,17 @@ entries:
     - https://github.com/lemeurherve/helm-charts/releases/download/rating-0.2.0/rating-0.2.0.tgz
     version: 0.2.0
   reports:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2023-08-11T16:36:59.657050068Z"
+    description: A Helm chart for reports.jenkins.io
+    digest: f2c49194f42e831c0e5825032a90af4146f42dd9b4b1f5011e355395246f7ae3
+    maintainers:
+    - name: timja
+    name: reports
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/reports-0.2.0/reports-0.2.0.tgz
+    version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
     created: "2022-09-21T13:54:39.623949007Z"
@@ -531,6 +705,16 @@ entries:
     urls:
     - https://github.com/jenkins-infra/public-charts/releases/download/reports-0.0.1/reports-0.0.1.tgz
     version: 0.0.1
+  rss2twitter:
+  - apiVersion: v2
+    created: "2023-08-11T16:36:59.76632319Z"
+    description: A Helm chart for https://github.com/umputun/rss2twitter
+    digest: 47ce0f1164982177421ffa88a9c8b5bd9c8c0652a81da9554f91060cfcbcc1b3
+    name: rss2twitter
+    type: application
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/rss2twitter-0.0.4/rss2twitter-0.0.4.tgz
+    version: 0.0.4
   uplink:
   - apiVersion: v1
     appVersion: "1.0"
@@ -555,6 +739,16 @@ entries:
     - https://github.com/jenkins-infra/public-charts/releases/download/uplink-0.1.0/uplink-0.1.0.tgz
     version: 0.1.0
   wiki:
+  - apiVersion: v2
+    appVersion: 0.0.7
+    created: "2023-08-11T16:36:59.900179476Z"
+    description: A Helm chart for wiki static content
+    digest: 113d4fd9188bda73b2da170b6db80f5a7de7fecddefc3330fd84c229b074ed44
+    name: wiki
+    type: application
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/wiki-0.3.88/wiki-0.3.88.tgz
+    version: 0.3.88
   - apiVersion: v2
     appVersion: 0.0.7
     created: "2022-09-21T13:54:40.13479048Z"
@@ -625,4 +819,4 @@ entries:
     urls:
     - https://github.com/jenkins-infra/public-charts/releases/download/wiki-0.1.0/wiki-0.1.0.tgz
     version: 0.1.0
-generated: "2022-09-21T13:54:40.13489178Z"
+generated: "2023-08-11T16:36:59.900320378Z"
