@@ -17,29 +17,21 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | grep "^charts/" | grep -v "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique > modified_charts_with_unit_tests.txt
-          
-          echo "== start"
-
           # Retrieve the list of modified chart names
           modifiedChartPaths=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | cut -d "/" -f1-2 | grep "^charts/" | sort --unique)
-          echo "= modifiedChartPaths: $modifiedChartPaths"
 
           # Keep only modified charts with unit tests
           modifiedChartsWithUnitTestsArray=()
           for chartName in "$modifiedChartPaths"; do
               path="${chartName}/tests"
-              echo "= test $chartName, path $path"
               if [ -d "$path" ]; then
-                  echo "= test $chartName has unit test(s)"
                   modifiedChartsWithUnitTestsArray+=("$(echo $chartName | cut -d '/' -f 2)")
-                  # modifiedChartsWithUnitTestsArray+=("$chartName")
               fi
           done
 
           echo "== array OK"
 
-          if [ -z "$modifiedChartsWithUnitTestsArray" ]; then
+          if [ -n "$modifiedChartsWithUnitTestsArray" ]; then
             modifiedChartsWithUnitTests=$(printf "%s\n" "${modifiedChartsWithUnitTestsArray[@]}")
             echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
 
