@@ -25,7 +25,7 @@ jobs:
           modifiedChartsWithUnitTests=$(echo $modifiedFolders | grep "^charts/" | grep -v "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique)
           
           # Transform the multiline value into a JSON array
-          jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input -slurp 'split("\n") | map(select(length > 0))')
+          jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input --slurp 'split("\n") | map(select(length > 0))')
 
           # Print the JSON array
           echo "$jsonArray"
