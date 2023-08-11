@@ -53,9 +53,8 @@ jobs:
         minor=0
         patch=0
 
-        git fetch --all
-        # Retrieve the pull request commit messages
-        commit_messages=$(git log --pretty=format:"%s" origin/${{ github.base_ref }}..origin/${{ github.head_ref }})
+        # Fetch pull request commits using GitHub API
+        commit_messages=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/commits" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" | jq -r '.[].commit.message')
 
         for line in $commit_messages; do
           case "$line" in
