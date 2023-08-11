@@ -52,7 +52,8 @@ jobs:
         major=0
         minor=0
         patch=0
-        
+
+        git fetch --all
         # Retrieve the pull request commit messages
         commit_messages=$(git log --pretty=format:"%s" origin/${{ github.base_ref }}..origin/${{ github.head_ref }})
 
