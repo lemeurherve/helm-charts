@@ -37,7 +37,7 @@ jobs:
               ((notBumped++))
             fi
 
-            echo "The version of the '${folder}' chart has been bumped from $MAIN_CHART_VERSION to $PR_CHART_VERSION."
+            echo "Info: the version of the '${folder}' chart has been bumped from $MAIN_CHART_VERSION to $PR_CHART_VERSION."
           done
 
           if [ "$notBumped" -gt 0 ]; then
