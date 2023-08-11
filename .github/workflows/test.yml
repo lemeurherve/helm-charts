@@ -35,7 +35,6 @@ jobs:
           # Keep only modified charts with unit tests
           modifiedChartsWithUnitTests=()
           while IFS= read -r chartName; do
-              # path="${chartName}/tests"
               if [ -d "${chartName}/tests" ]; then
                   modifiedChartsWithUnitTests+=("$(echo $chartName | cut -d '/' -f 2)")
               fi
