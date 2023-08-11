@@ -42,7 +42,7 @@ jobs:
             # Print the JSON array
             echo "= jsonArray: $jsonArray"
 
-            echo "modified_charts_with_unit_tests={\"chart\": ${jsonArray}}" >> "$GITHUB_OUTPUT"
+            echo "modified_charts_with_unit_tests=\"{\"chart\": ${jsonArray}}\"" >> "$GITHUB_OUTPUT"
           else
             echo "= no modified chart with unit tests found."
             echo "modified_charts_with_unit_tests=''" >> "$GITHUB_OUTPUT"
