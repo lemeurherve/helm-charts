@@ -20,16 +20,11 @@ jobs:
           # gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | grep "^charts/" | grep -v "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique > modified_charts_with_unit_tests.txt
           
           # Retrieve the list of modified folder names
-          modifiedFolders=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname)
-          echo "= modifiedFolders: $modifiedFolders"
+          modifiedChartsName=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | cut -d "/" -f 2 | sort --unique)
+          echo "= modifiedChartsName: $modifiedChartsName"
           # Extract charts with unit tests from the modified folders
-          modifiedChartNamesOnly=$(echo $modifiedFolders | grep "^charts/" | cut -d "/" -f 2 | sort --unique)
+          modifiedChartNamesOnly=$(echo $modifiedChartsName | grep "^charts/")
           echo "= modifiedChartNamesOnly: $modifiedChartNamesOnly"
-
-
-          # modifiedCharts | grep --invert-match "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique)
-          # modifiedChartsWithUnitTests=$(echo $modifiedFolders | grep "^charts/" | grep --invert-match "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique)
-          # echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
 
           # Keep only modified charts with unit tests
           modifiedChartsWithUnitTestsArray=()
