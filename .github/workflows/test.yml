@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     # outputs:
     #   modified_charts_with_unit_tests: ${{ steps.find-modified-charts-with-unit-tests.outputs.modified_charts_with_unit_tests }}
+    outputs:
+      charts_matrix: ${{ steps.list_modified_charts_with_unit_tests.outputs.modified_charts_with_unit_tests }}
     steps:
       - uses: actions/checkout@v3
       - id: list_modified_charts_with_unit_tests
@@ -67,12 +69,20 @@ jobs:
   #     - run: zip ${{ matrix.dir }} etc.
 
 
+  job2:
+    runs-on: ubuntu-latest
+    needs: find-modified-charts-with-unit-tests
+    steps:
+      - env:
+          OUTPUT1: ${{needs.find-modified-charts-with-unit-tests.outputs.charts_matrix}}
+        run: echo "$OUTPUT1"
 
   unit-tests:
     runs-on: ubuntu-latest
-    if: ${{ needs.find-modified-charts-with-unit-tests.outputs.modified_charts_with_unit_tests != '' }}  # Without it, the strategy parser will fail if the changed_directories is empty.
+    needs: find-modified-charts-with-unit-tests
+    if: ${{ needs.find-modified-charts-with-unit-tests.outputs.charts_matrix != '' }}  # Without it, the strategy parser will fail if the changed_directories is empty.
     strategy:
-      matrix: ${{fromJson(needs.find-modified-charts-with-unit-tests.outputs.modified_charts_with_unit_tests)}}
+      matrix: ${{fromJson(needs.find-modified-charts-with-unit-tests.outputs.charts_matrix)}}
         # chart:
         #   - accountapp
         #   - artifact-caching-proxy
