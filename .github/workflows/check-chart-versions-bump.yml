@@ -2,7 +2,7 @@ name: Check chart version bump
 on:
   pull_request:
 jobs:
-  bump:
+  check-chart-version-bump:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,11 +25,19 @@ jobs:
         run: |
           git checkout -b $GITHUB_BASE_REF
           git checkout -b $GITHUB_HEAD_REF
+          echo "== chart.yaml on $GITHUB_BASE_REF:"
+          git show $GITHUB_BASE_REF:charts/$folder/Chart.yaml
+          echo "== chart.yaml on $GITHUB_HEAD_REF:"
+          git show $GITHUB_HEAD_REF:charts/$folder/Chart.yaml
+          echo "== next"
           
           for folder in $modified_chart_folders; do
             MAIN_CHART_VERSION=$(git show $GITHUB_BASE_REF:charts/$folder/Chart.yaml | grep "^version:")
             PR_CHART_VERSION=$(git show $GITHUB_HEAD_REF:charts/$folder/Chart.yaml | grep "^version:")
             
+            echo "$folder MAIN_CHART_VERSION: $MAIN_CHART_VERSION"
+            echo "$folder PR_CHART_VERSION: $PR_CHART_VERSION"
+
             if [ "$MAIN_CHART_VERSION" != "$PR_CHART_VERSION" ]; then
               echo "ERROR: the version '$PR_CHART_VERSION' of the '${folder}' chart hasn't been bumped."
               exit 1
