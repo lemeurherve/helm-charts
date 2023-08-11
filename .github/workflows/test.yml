@@ -29,7 +29,7 @@ jobs:
           # Keep only modified charts with unit tests
           modifiedChartsWithUnitTestsArray=()
           for chartName in "$modifiedChartNamesOnly"; do
-              path="charts/${chartName}/tests"
+              path="${chartName}/tests"
               echo "= test $chartName, path $path"
               if [ -d "$path" ]; then
                   echo "= test $chartName has unit test(s)"
