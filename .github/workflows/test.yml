@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - main
-  pull_request: null
-  workflow_dispatch: null
+  pull_request:
+  workflow_dispatch:
 env:
   UNITTEST_VERSION: v0.3.4
 jobs:
@@ -23,37 +23,22 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "== start"
           if [ "$GITHUB_EVENT_NAME" == "pull_request" ]; then
-            echo "= PR"
             # Retrieve the list of modified chart names in the pull request
             modifiedChartPaths=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | cut -d "/" -f1-2 | grep "^charts/" | sort --unique)
-            echo "modifiedChartPaths: $modifiedChartPaths"
           else
             # Retrieve all charts
             modifiedChartPaths=$(find . -maxdepth 2 -type d | cut -d "/" -f2-3 | grep "^charts/" | sort --unique)
-            echo "modifiedChartPaths: $modifiedChartPaths"
-            # # TODO: Retrieve only the list of modified chart names in the last commit since the push
-            # git fetch --all
-            # echo "= diff name-only"
-            # git diff --name-only 
-            # echo "= diff name-only after"
-            # git diff --name-only ${{github.event.after}}
-            # # echo "= diff name-only before"
-            # # git diff --name-only ${{github.event.before}}
-            # # echo "= diff name-only before..after"
-            # git switch ${{ github.ref_name }}
-            # git diff --name-only ${{github.event.before}}..${{github.event.after}}
+            # TODO: Retrieve only the list of modified chart names in the last commit since the push
           fi
 
           # Keep only modified charts with unit tests
           modifiedChartsWithUnitTests=()
-          for chartName in "$modifiedChartPaths"; do
-              path="${chartName}/tests"
-              if [ -d "$path" ]; then
+          while IFS= read -r chartName; do
+              if [ -d "${chartName}/tests" ]; then
                   modifiedChartsWithUnitTests+=("$(echo $chartName | cut -d '/' -f 2)")
               fi
-          done
+          done <<< "$modifiedChartPaths"
 
           if [ -n "$modifiedChartsWithUnitTests" ]; then
             # Transform the array into a JSON
