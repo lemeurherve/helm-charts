@@ -54,7 +54,7 @@ jobs:
         patch=0
         
         # Retrieve the pull request commit messages
-        commit_messages=$(git log --pretty=format:"%s" ${{ github.event.before }}..${{ github.sha }})
+        commit_messages=$(git log --pretty=format:"%s" origin/${{ github.base_ref }}..origin/${{ github.head_ref }})
 
         for line in $commit_messages; do
           case "$line" in
