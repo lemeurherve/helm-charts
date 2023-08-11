@@ -40,7 +40,7 @@ jobs:
             echo "$folder MAIN_CHART_VERSION: $MAIN_CHART_VERSION"
             echo "$folder PR_CHART_VERSION: $PR_CHART_VERSION"
 
-            if [ "$MAIN_CHART_VERSION" != "$PR_CHART_VERSION" ]; then
+            if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
               echo "ERROR: the version '$PR_CHART_VERSION' of the '${folder}' chart hasn't been bumped."
               exit 1
             fi
