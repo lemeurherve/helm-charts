@@ -21,19 +21,44 @@ jobs:
           
           # Retrieve the list of modified folder names
           modifiedFolders=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname)
+          echo "= modifiedFolders: $modifiedFolders"
           # Extract charts with unit tests from the modified folders
-          modifiedChartsWithUnitTests=$(echo $modifiedFolders | grep "^charts/" | grep -v "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique)
+          modifiedChartFoldersOnly=$(echo $modifiedFolders | grep "^charts/")
+          echo "= modifiedChartFoldersOnly: $modifiedChartFoldersOnly"
+
+
+          # modifiedCharts | grep --invert-match "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique)
+          # modifiedChartsWithUnitTests=$(echo $modifiedFolders | grep "^charts/" | grep --invert-match "/templates/tests" | grep "/tests" | cut -d "/" -f 2 | sort --unique)
+          # echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
+
+          # Keep only modified charts with unit tests
+          modifiedChartsWithUnitTestsArray=()
+          for folder in "$modifiedChartFoldersOnly"; do
+              echo "= test folder $folder"
+              if [ -d "${folder}/tests" ]; then
+                  echo "= test folder $folder has unit test(s)"
+                  modifiedChartsWithUnitTestsArray+=("$folder")
+              fi
+          done
+          modifiedChartsWithUnitTests=$(printf "%s\n" "${modifiedChartsWithUnitTestsArray[@]}")
+          echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
+
           
           # Transform the multiline value into a JSON array
           jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input --slurp 'split("\n") | map(select(length > 0))')
 
           # Print the JSON array
           echo "$jsonArray"
-                    
+
+
+          # if [ ${#my_array[@]} -eq 0 ]; then
+
           # Store the chart name(s) as JSON if there are results
           if [ -n "$modifiedChartsWithUnitTests" ]; then
+            echo "= not empty"
             echo "modified_charts_with_unit_tests={\"chart\": $jsonArray}" >> "$GITHUB_OUTPUT"
           else
+            echo "= empty"
             echo "modified_charts_with_unit_tests=''" >> "$GITHUB_OUTPUT"
           fi
 
