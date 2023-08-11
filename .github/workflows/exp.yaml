@@ -39,23 +39,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Git
-      run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
+      uses: actions/checkout@v3
 
     - name: Generate version
       id: generate_version
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         major=0
         minor=0
         patch=0
 
         # Fetch pull request commits using GitHub API
-        commit_messages=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/commits" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" | jq -r '.[].commit.message')
+        commit_messages=$(cgh pr view ${{ github.event.pull_request.number }} --json "commits" | jq -r '.commits[] | .messageHeadline')
 
+        echo "= commit_messages: $commit_messages"
+        echo "==="
         for line in $commit_messages; do
           case "$line" in
             feat:*) ((major++));;
