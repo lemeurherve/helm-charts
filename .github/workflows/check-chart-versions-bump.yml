@@ -26,7 +26,7 @@ jobs:
           git fetch --quiet origin pull/${{ github.event.pull_request.number }}/head:pr-branch
           git fetch --quiet origin ${{ github.event.pull_request.base.ref }}:target-branch
           
-          notBumped = false
+          notBumped=0
 
           for folder in $modified_chart_folders; do
             MAIN_CHART_VERSION=$(git show target-branch:charts/$folder/Chart.yaml | grep "^version:")
@@ -37,10 +37,13 @@ jobs:
 
             if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ]; then
               echo "ERROR: the version of the '${folder}' chart hasn't been bumped: '$PR_CHART_VERSION'"
-              notBumped = true
+              ((notBumped++))
             fi
 
             echo "The version of the '${folder}' chart has been bumped: '$MAIN_CHART_VERSION' > '$PR_CHART_VERSION'"
           done
 
-          if $notBumped exit 1
+          if [ "$notBumped" -gt 0 ]; then
+            echo "$notBumped errors."
+            exit 1
+          fi
