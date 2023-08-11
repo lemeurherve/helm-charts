@@ -43,4 +43,4 @@ jobs:
             echo "The version of the '${folder}' chart has been bumped: '$MAIN_CHART_VERSION' > '$PR_CHART_VERSION'"
           done
 
-          if notBumped exit 1
+          if $notBumped exit 1
