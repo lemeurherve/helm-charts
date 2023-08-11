@@ -37,12 +37,15 @@ jobs:
             echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
 
             # Transform the multiline value into a JSON array
-            jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input --slurp 'split("\n") | map(select(length > 0))')
+            jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input --slurp 'split("\n") | map(select(length > 0))' | tr -d '\n')
 
             # Print the JSON array
             echo "= jsonArray: $jsonArray"
+            jsonContent="{\"chart\": ${jsonArray}}"
 
-            echo "modified_charts_with_unit_tests=\"{\"chart\": ${jsonArray}}\"" >> "$GITHUB_OUTPUT"
+            echo "= jsonContent: $jsonContent"
+
+            echo "modified_charts_with_unit_tests=$jsonContent" >> "$GITHUB_OUTPUT"
           else
             echo "= no modified chart with unit tests found."
             echo "modified_charts_with_unit_tests=''" >> "$GITHUB_OUTPUT"
