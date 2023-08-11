@@ -46,6 +46,7 @@ jobs:
             # git diff --name-only ${{github.event.before}}..${{github.event.after}}
           fi
 
+          IFS=$'\n'
           for chartName in "$modifiedChartPaths"; do
               echo "chartName: $chartName"
               path="${chartName}/tests"
