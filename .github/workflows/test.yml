@@ -34,31 +34,27 @@ jobs:
           # Keep only modified charts with unit tests
           modifiedChartsWithUnitTestsArray=()
           for folder in "$modifiedChartFoldersOnly"; do
-              echo "= test folder $folder"
-              if [ -d "${folder}/tests" ]; then
+              path="${folder}/tests"
+              echo "= test folder $folder path $path"
+              if [ -d "$path" ]; then
                   echo "= test folder $folder has unit test(s)"
                   modifiedChartsWithUnitTestsArray+=("$folder")
               fi
           done
-          modifiedChartsWithUnitTests=$(printf "%s\n" "${modifiedChartsWithUnitTestsArray[@]}")
-          echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
 
-          
-          # Transform the multiline value into a JSON array
-          jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input --slurp 'split("\n") | map(select(length > 0))')
+          if [ ${#modifiedChartsWithUnitTestsArray[@]} -eq 0 ]; then
+            modifiedChartsWithUnitTests=$(printf "%s\n" "${modifiedChartsWithUnitTestsArray[@]}")
+            echo "= modifiedChartsWithUnitTests: $modifiedChartsWithUnitTests"
 
-          # Print the JSON array
-          echo "$jsonArray"
+            # Transform the multiline value into a JSON array
+            jsonArray=$(echo $modifiedChartsWithUnitTests | jq --raw-input --slurp 'split("\n") | map(select(length > 0))')
 
+            # Print the JSON array
+            echo "$jsonArray"
 
-          # if [ ${#my_array[@]} -eq 0 ]; then
-
-          # Store the chart name(s) as JSON if there are results
-          if [ -n "$modifiedChartsWithUnitTests" ]; then
-            echo "= not empty"
             echo "modified_charts_with_unit_tests={\"chart\": $jsonArray}" >> "$GITHUB_OUTPUT"
           else
-            echo "= empty"
+            echo "= no modified chart with unit tests found."
             echo "modified_charts_with_unit_tests=''" >> "$GITHUB_OUTPUT"
           fi
 
