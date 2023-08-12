@@ -7,7 +7,6 @@ jobs:
     outputs:
       charts_matrix: ${{ steps.list_modified_charts.outputs.modified_charts }}
     steps:
-      - uses: actions/checkout@v3
       - id: list_modified_charts
         name: List modified charts
         env:
@@ -21,7 +20,7 @@ jobs:
             # Transform the array into a JSON
             jsonArray=$(echo "$modifiedCharts" | jq --raw-input --slurp 'split("\n") | map(select(length > 0))' | tr -d '\n')
           else
-            echo "= no modified chart found."
+            echo "== no modified chart found."
           fi
 
           # Store the JSON as step output
@@ -34,6 +33,7 @@ jobs:
       matrix: ${{fromJson(needs.find_modified_charts.outputs.charts_matrix)}}
       fail-fast: false
     steps:
+      - uses: actions/checkout@v3
       - id: check_bump
         name: Check if chart version has been bumped
         run: |
@@ -46,14 +46,14 @@ jobs:
 
           # If it's a new chart we're just informing the file doesn't exist on the target branch
           if [ -z "$MAIN_CHART_VERSION" ]; then
-            echo "Info: charts/${{ matrix.chart }}/Chart.yaml doesn't exist on the target branch."
+            echo "= Info: charts/${{ matrix.chart }}/Chart.yaml doesn't exist on the target branch."
           fi
 
           # If the version hasn't been bumped between the pull request and the target branch
           # or if there is no Chart.yaml in the pull request branch
           if [ "$MAIN_CHART_VERSION" == "$PR_CHART_VERSION" ] || [ -z "$PR_CHART_VERSION" ]; then
-            echo "ERROR: the version of the '${{ matrix.chart }}' chart hasn't been bumped: '$PR_CHART_VERSION'."
+            echo "= ERROR: the version of the '${{ matrix.chart }}' chart hasn't been bumped: '$PR_CHART_VERSION'."
             exit 1
           fi
 
-          echo "Info: the version of the '${{ matrix.chart }}' chart has been bumped from '$MAIN_CHART_VERSION' to '$PR_CHART_VERSION'."
+          echo "= Info: the version of the '${{ matrix.chart }}' chart has been bumped from '$MAIN_CHART_VERSION' to '$PR_CHART_VERSION'."
