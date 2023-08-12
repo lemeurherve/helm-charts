@@ -7,6 +7,7 @@ jobs:
     outputs:
       charts_matrix: ${{ steps.list_modified_charts.outputs.modified_charts }}
     steps:
+      - uses: actions/checkout@v3
       - id: list_modified_charts
         name: List modified charts
         env:
