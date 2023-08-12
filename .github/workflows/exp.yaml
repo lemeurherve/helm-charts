@@ -1,0 +1,76 @@
+name: Generate SemVer Version
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+  workflow_dispatch:
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+  generate-version:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Generate version
+      id: generate_version
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        major=0
+        minor=0
+        patch=0
+
+        # Fetch pull request commits using GitHub API
+        commit_messages=$(gh pr view ${{ github.event.pull_request.number }} --json "commits" | jq -r '.commits[] | .messageHeadline')
+
+        echo "= commit_messages: $commit_messages"
+        echo "==="
+        for line in $commit_messages; do
+          case "$line" in
+            feat:*) ((major++));;
+            fix:*) ((minor++));;
+            chore:*) ((patch++));;
+            *)
+              # Default to patch if no specific type matches
+              ((patch++));;
+          esac
+        done
+
+        echo "VERSION=$major.$minor.$patch" >> $GITHUB_ENV
+        echo "Generated version: $major.$minor.$patch"
+
+    - name: Set output version
+      run: echo "Version ${{ env.VERSION }}" >> $GITHUB_ENV
+
+    - name: Use the output version
+      run: echo "The generated version is $VERSION"

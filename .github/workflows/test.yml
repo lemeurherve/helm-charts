@@ -1,23 +1,64 @@
 name: Test Charts
 on:
-  push: null
-  pull_request: null
-  workflow_dispatch: null
+  push:
+    branches:
+      - main
+    paths:
+      - 'charts/**'
+  pull_request:
+    paths:
+      - 'charts/**'
+  workflow_dispatch:
 env:
   UNITTEST_VERSION: v0.3.4
 jobs:
-  unit-tests:
+  find-modified-charts-with-unit-tests:
     runs-on: ubuntu-latest
+    outputs:
+      charts_matrix: ${{ steps.list_modified_charts_with_unit_tests.outputs.modified_charts_with_unit_tests }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: list_modified_charts_with_unit_tests
+        name: List modified charts with unit tests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" == "pull_request" ]; then
+            # Retrieve the list of modified chart names in the pull request
+            modifiedChartPaths=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | cut -d "/" -f1-2 | grep "^charts/" | sort --unique)
+          else
+            # Retrieve all charts
+            modifiedChartPaths=$(find . -maxdepth 2 -type d | cut -d "/" -f2-3 | grep "^charts/" | sort --unique)
+            # TODO: Retrieve only the list of modified chart names in the last commit since the push
+          fi
+
+          # Keep only modified charts with unit tests
+          modifiedChartsWithUnitTests=()
+          while IFS= read -r chartName; do
+              if [ -d "${chartName}/tests" ]; then
+                  modifiedChartsWithUnitTests+=("$(echo $chartName | cut -d '/' -f 2)")
+              fi
+          done <<< "$modifiedChartPaths"
+
+          if [ -n "$modifiedChartsWithUnitTests" ]; then
+            # Transform the array into a JSON
+            jsonArray=$(printf "%s\n" "${modifiedChartsWithUnitTests[@]}" | jq --raw-input --slurp 'split("\n") | map(select(length > 0))' | tr -d '\n')
+            jsonContent="{\"chart\": ${jsonArray}}"
+
+            # Store the JSON as step output
+            echo "modified_charts_with_unit_tests=$jsonContent" >> "$GITHUB_OUTPUT"
+          else
+            echo "= no modified chart with unit tests found."
+            # Store the JSON as step output
+            echo "modified_charts_with_unit_tests=''" >> "$GITHUB_OUTPUT"
+          fi
+
+  run-unit-tests:
+    runs-on: ubuntu-latest
+    needs: find-modified-charts-with-unit-tests
+    if: ${{ needs.find-modified-charts-with-unit-tests.outputs.charts_matrix != '' }}  # Without it, the strategy parser will fail if the changed_directories is empty.
     strategy:
-      matrix:
-        chart:
-          - accountapp
-          - artifact-caching-proxy
-          - httpredirector
-          - jenkins-jobs
-          - jenkins-kubernetes-agents
-          - mirrorbits
-          - plugin-health-scoring
+      matrix: ${{fromJson(needs.find-modified-charts-with-unit-tests.outputs.charts_matrix)}}
       fail-fast: false
     steps:
       - name: Checkout
