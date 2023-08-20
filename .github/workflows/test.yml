@@ -72,5 +72,5 @@ jobs:
         working-directory: ./charts/
         run: |
           for chartName in ${{ steps.list_modified_charts_with_unit_tests.outputs.modified_charts_with_unit_tests }}; do
-            helm unittest "charts/$chartName"
+            helm unittest "$chartName"
           done
