@@ -57,10 +57,10 @@ jobs:
           echo "CURRENT_HELM_VERSION=${current_helm_version}" >> $GITHUB_OUTPUT
       - id: setup_helm
         name: Set up Helm
-        if: steps.list_modified_charts_with_unit_tests.outputs.modified_charts_with_unit_tests != ''
         uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3
         with:
           version: "${{ steps.tools-versions.outputs.CURRENT_HELM_VERSION }}"
+        # if: steps.list_modified_charts_with_unit_tests.outputs.modified_charts_with_unit_tests != ''
       - id: install_helm_unittests
         name: install helm unittests
         if: steps.list_modified_charts_with_unit_tests.outputs.modified_charts_with_unit_tests != ''
