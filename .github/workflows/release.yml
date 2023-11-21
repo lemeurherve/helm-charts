@@ -38,39 +38,32 @@ jobs:
         run: |
           # KISS, last commit subject as changelog for every modified chart
           changelog=$(git log --format=%s -n 1)
-          echo "= changelog: ${changelog}"
 
           # Set IFS to a comma to split the string into an array
           IFS=',' read -ra changedCharts <<< "${{ steps.chart_releaser.outputs.changed_charts }}"
 
           for chart in "${changedCharts[@]}"; do          
             chartName=$(echo "${chart}" | cut -d '/' -f 2)
-            echo "= chartName: ${chartName}"
             # Retrieve version from Chart.yaml
             version=$(yq '.version' "${chart}/Chart.yaml")
-            echo "= version: ${version}"
-            tag="${chartName}-${version}"
-            echo "= tag: ${tag}"
             
             # Retrive release id and body from tag
-            release=$(curl -L "https://api.github.com/repos/${{ github.repository }}/releases/tags/${tag}")
+            tag="${chartName}-${version}"
+            release=$(curl --location --silent --fail --show-error "https://api.github.com/repos/${{ github.repository }}/releases/tags/${tag}")
             releaseId=$(echo "${release}" | jq --raw-output '.id')
-            echo "= releaseId: ${releaseId}"
             releaseBody=$(echo "${release}" | jq --raw-output '.body')
-            echo "= releaseBody: ${releaseBody}"
     
-
             # Update release
             newlines="\r\n\r\n"
             body="${releaseBody}${newlines}## Changelog${newlines}${changelog}"
-            echo "= body:"
+            echo "= release description for ${tag}:"
             echo "${body}"
-            curl -L \
+            curl --silent --fail --show-error --output /dev/null --location \
               -X PATCH \
-              -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
+              --header "Accept: application/vnd.github+json" \
+              --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              --header "X-GitHub-Api-Version: 2022-11-28" \
               "https://api.github.com/repos/${{ github.repository }}/releases/${releaseId}" \
-              -d "{\"body\":\"${body}\"}"
+              --data "{\"body\":\"${body}\"}"
           done
   
