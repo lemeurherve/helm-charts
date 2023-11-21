@@ -138,6 +138,16 @@ entries:
   basic-helm-chart-example:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2023-11-21T21:20:48.355414889Z"
+    description: A Helm chart for Kubernetes
+    digest: fe8e94b5521fd8d127500518f68d443bb7c698f775ae0438cd4ffbcaa56a7be3
+    name: basic-helm-chart-example
+    type: application
+    urls:
+    - https://github.com/lemeurherve/helm-charts/releases/download/basic-helm-chart-example-0.2.2/basic-helm-chart-example-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2023-11-21T21:17:30.438731493Z"
     description: A Helm chart for Kubernetes
     digest: 1368f46f9dcec0ec0e3f867c2b413796f390dc6017c5af1a956118037e902cc3
@@ -1146,4 +1156,4 @@ entries:
     urls:
     - https://github.com/jenkins-infra/public-charts/releases/download/wiki-0.1.0/wiki-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-21T21:17:30.438856346Z"
+generated: "2023-11-21T21:20:48.35560846Z"
