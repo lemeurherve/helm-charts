@@ -61,7 +61,8 @@ jobs:
     
 
             # Update release
-            body="${releaseBody}\r\n\r\n## Changelog\r\n\r\${changelog}"
+            newlines="\r\n\r\n"
+            body="${releaseBody}${newlines}## Changelog${newlines}${changelog}"
             echo "= body:"
             echo "${body}"
             curl -L \
