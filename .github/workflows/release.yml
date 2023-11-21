@@ -49,13 +49,11 @@ jobs:
             chartName=$(echo "${chart}" | cut -d '/' -f 2)
             # Retrieve version from Chart.yaml
             version=$(yq '.version' "${chart}/Chart.yaml")
-
             # Retrive release id and body from tag
             tag="${chartName}-${version}"
             release=$(curl --location --silent --fail --show-error "https://api.github.com/repos/${{ github.repository }}/releases/tags/${tag}")
             releaseId=$(echo "${release}" | jq --raw-output '.id')
             releaseBody=$(echo "${release}" | jq --raw-output '.body')
-
             # Update release
             newlines="\r\n\r\n"
             body="${releaseBody}${newlines}## Changelog${newlines}${changelog}"
