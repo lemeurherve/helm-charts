@@ -22,26 +22,6 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3
 
-      - name: List modified charts
-        id: list_modified_charts
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          # Retrieve the list of modified chart names in the pull request
-          modifiedCharts=$(gh pr view ${{ github.event.pull_request.number }} --json files -q '.files[].path' | xargs dirname | grep "^charts/" | cut -d "/" -f 2 | sort --unique | tr '\n' ',')
-
-          # Remove last comma
-          modifiedCharts="${modifiedCharts%,}"
-
-          if [ -z "$modifiedCharts" ]; then
-            echo "= Info: no modified chart found."
-          else
-            echo "= modified chart(s): ${modifiedCharts}"
-          fi
-
-          # Store the result
-          echo "modified_charts=${modifiedCharts}" >> "$GITHUB_OUTPUT"
-
       # Needed for subchart dependencies
       - name: Add jenkins-infra Helm repository
         run: helm repo add jenkins-infra https://jenkins-infra.github.io/helm-charts
@@ -53,16 +33,17 @@ jobs:
    
       - name: Update modified chart release(s)
         id: update_chart_releases
-        if: steps.list_modified_charts.outputs.modified_charts != ''
+        if: steps.chart_releaser.outputs.changed_charts != ''
         run: |
           # KISS, last commit subject as changelog for every modified chart
           changelog=$(git log --format=%s -n 1)
           echo "= changelog: ${changelog}"
 
           # Set IFS to a comma to split the string into an array
-          IFS=',' read -ra modifiedChartNames <<< "${{ steps.list_modified_charts.outputs.modified_charts }}"
+          IFS=',' read -ra changedCharts <<< "${{ steps.chart_releaser.outputs.changed_charts }}"
 
-          for chart in "${modifiedChartNames[@]}"; do          
+          for chart in "${changedCharts[@]}"; do          
+            echo "= chart: ${chart}"
             # Retrieve version from Chart.yaml
             version=$(yq '.version' "charts/${chart}/Chart.yaml")
             echo "= version: ${version}"
