@@ -28,7 +28,11 @@ jobs:
             echo "= list of modified path(s) from the pull request: $modifiedPaths"
 
             # Retrieve chart names from modified files
+            echo ":modifiedPaths: ${modifiedPaths}"
+            dirnames=$(echo ${modifiedPaths} | xargs dirname)
+            echo ":dirnames: ${dirnames}"
             modifiedChartPaths=$(echo ${modifiedPaths} | xargs dirname | grep "^charts/" | cut -d "/" -f1-2 | sort --unique)
+            echo ":modifiedChartPaths: ${modifiedChartPaths}"
 
             # Test all charts if this workflow has been modified
             modifiedWorkflow=$(echo ${modifiedPaths} | grep ".github/workflows/test.yml")
