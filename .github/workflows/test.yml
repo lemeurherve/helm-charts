@@ -32,7 +32,7 @@ jobs:
 
             # Test all charts if this workflow has been modified
             modifiedWorkflow=$(echo ${modifiedPaths} | grep "^.github/workflows/test.yml" || echo "")
-            modifiedWorkflow=$(echo ${modifiedPaths} | xargs echo | grep "^.github/workflows/test.yml")
+            modifiedWorkflow=$(echo ${modifiedPaths} | grep "^.github/workflows/test.yml")
             if [ -n "${modifiedWorkflow}" ]; then
               modifiedChartPaths=$allChartsPaths
               echo "= workflow modified, including all charts"
