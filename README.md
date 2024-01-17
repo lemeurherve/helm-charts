@@ -12,3 +12,4 @@ Helm chart repository containing the jenkins-infra helm charts used [in the Jenk
 - You can then run `helm search repo jenkins-infra` to see the charts.
 - To install the `<chart-name>` chart: `helm install my-<chart-name> jenkins-infra/<chart-name>`
 - To uninstall the chart: `helm delete my-<chart-name>`
+
