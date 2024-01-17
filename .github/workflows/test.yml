@@ -35,7 +35,8 @@ jobs:
             echo ":modifiedChartPaths: ${modifiedChartPaths}"
 
             # Test all charts if this workflow has been modified
-            modifiedWorkflow=$(echo ${modifiedPaths} | grep 'test.yml')
+            # modifiedWorkflow=$(echo ${modifiedPaths} | grep 'test.yml')
+            modifiedWorkflow=$(echo ${modifiedPaths} | xargs dirname)
             echo ":modifiedWorkflow: ${modifiedWorkflow}"
             if [ -n "${modifiedWorkflow}" ]; then
               modifiedChartPaths=$allChartsPaths
